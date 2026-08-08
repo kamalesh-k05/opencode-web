@@ -1,58 +1,235 @@
-import ScrollExpand from './components/ScrollExpand'
+import { lazy, Suspense, useEffect, useRef, useState } from 'react'
+import AnimatedButton from './components/AnimatedButton'
+import Topography from './components/Topography'
+import Ferrofluid from './components/Ferrofluid'
+import Lightfall from './components/Lightfall'
 import './App.css'
 
-const HERO_IMAGE =
-  'https://images.unsplash.com/photo-1505373877841-8d25f7d46678?q=80&w=2400&auto=format&fit=crop'
+const Scene = lazy(() => import('./components/Scene'))
 
-const PROJECTS = [
+const NAV_LINKS = [
+  { label: 'About', href: '#about' },
+  { label: 'Programs', href: '#programs' },
+  { label: 'Research', href: '#research' },
+  { label: 'Admissions', href: '#admissions' },
+]
+
+const MARQUEE = [
+  'Artificial Intelligence',
+  'Cybersecurity',
+  'Data Science',
+  'Software Engineering',
+  'Networks &amp; Distributed Systems',
+  'Human–Computer Interaction',
+  'Algorithms &amp; Complexity',
+  'Graphics &amp; Game Development',
+  'Quantum Computing',
+  'Cloud &amp; DevOps',
+]
+
+const PROGRAMS = [
   {
-    title: 'Aurora Analytics',
-    description:
-      'A real-time dashboard that turns thousands of events per second into charts people actually understand.',
-    tags: ['React', 'TypeScript', 'D3', 'WebSocket'],
-    image:
-      'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1200&auto=format&fit=crop',
+    index: '01',
+    title: 'Artificial Intelligence',
+    blurb: 'Neural networks, reinforcement learning, and the ethics of intelligent machines.',
+    tags: ['Machine Learning', 'NLP', 'Computer Vision'],
+    accent: '#ff5ce1',
   },
   {
-    title: 'Northstar Commerce',
-    description:
-      'Headless storefront with sub-second product search and a checkout flow that ships 38% more carts.',
-    tags: ['Next.js', 'GraphQL', 'PostgreSQL'],
-    image:
-      'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?q=80&w=1200&auto=format&fit=crop',
+    index: '02',
+    title: 'Cybersecurity',
+    blurb: 'Defend modern infrastructure — from secure cryptography to offensive red-teaming.',
+    tags: ['Cryptography', 'Networks', 'Forensics'],
+    accent: '#22d3ee',
   },
   {
-    title: 'Drift Editor',
-    description:
-      'A collaborative markdown editor with live cursors, offline sync, and a plugin system.',
-    tags: ['React', 'CRDTs', 'IndexedDB'],
-    image:
-      'https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1200&auto=format&fit=crop',
+    index: '03',
+    title: 'Data Science',
+    blurb: 'Turn raw streams of data into decisions, models, and stories that matter.',
+    tags: ['Statistics', 'Databases', 'Visualization'],
+    accent: '#4ade80',
+  },
+  {
+    index: '04',
+    title: 'Software Engineering',
+    blurb: 'Design and ship reliable systems at scale — architecture, testing, and team craft.',
+    tags: ['Systems Design', 'DevOps', 'Open Source'],
+    accent: '#60a5fa',
+  },
+  {
+    index: '05',
+    title: 'Systems &amp; Networks',
+    blurb: 'The invisible backbone: operating systems, distributed computing, and the internet.',
+    tags: ['OS', 'Compilers', 'Distributed Systems'],
+    accent: '#8b7bff',
+  },
+  {
+    index: '06',
+    title: 'Graphics &amp; Games',
+    blurb: 'Real-time rendering, simulation, and the math that makes pixels move.',
+    tags: ['Rendering', 'GPU', 'Simulation'],
+    accent: '#fbbf24',
   },
 ]
 
-const SKILLS = [
-  'JavaScript / TypeScript',
-  'React & Next.js',
-  'Node.js',
-  'CSS / Animations',
-  'GraphQL',
-  'PostgreSQL',
-  'Testing',
-  'UI Engineering',
+const STATS = [
+  { value: 92, prefix: '', suffix: '%', label: 'job placement within 6 months' },
+  { value: 40, prefix: '', suffix: '+', label: 'research labs &amp; active groups' },
+  { value: 1800, prefix: '', suffix: '', label: 'undergraduate students' },
+  { value: 5, prefix: '#', suffix: '', label: 'national program ranking' },
 ]
+
+const FLUID_COLORS = ['#22d3ee', '#8b7bff', '#ff5ce1']
+
+const FEATURES = [
+  'Project-based capstone with industry partners every semester',
+  '2:1 student-to-advising ratio with faculty mentors',
+  'Freshman-friendly intro track — no prior coding required',
+  'Internships at 300+ partner companies worldwide',
+]
+
+const CODE_LINES = [
+  { tokens: [{ t: 'k', v: 'class' }, { t: ' ', v: ' ' }, { t: 'f', v: 'NeuralCore' }, { t: ' ', v: ' ' }, { t: 'p', v: ':' }] },
+  { tokens: [{ t: ' ', v: '    ' }, { t: 'k', v: 'def' }, { t: ' ', v: ' ' }, { t: 'f', v: 'train' }, { t: 'p', v: '(' }, { t: ' ', v: 'self' }, { t: 'p', v: ', ' }, { t: ' ', v: 'data' }, { t: 'p', v: ')' }, { t: 'p', v: ':' }] },
+  { tokens: [{ t: ' ', v: '        ' }, { t: 's', v: '"learning rate" ' }, { t: 'p', v: '= ' }, { t: 'c', v: '1e-3' }] },
+  { tokens: [{ t: ' ', v: '        ' }, { t: 'k', v: 'for' }, { t: ' ', v: ' ' }, { t: ' ', v: 'epoch' }, { t: ' ', v: ' ' }, { t: 'k', v: 'in' }, { t: ' ', v: ' ' }, { t: ' ', v: 'range' }, { t: 'p', v: '(' }, { t: 'c', v: '100' }, { t: 'p', v: ')' }, { t: 'p', v: ':' }] },
+  { tokens: [{ t: ' ', v: '            ' }, { t: ' ', v: 'self' }, { t: 'p', v: '.' }, { t: ' ', v: 'backward' }, { t: 'p', v: '(' }, { t: ' ', v: 'data' }, { t: 'p', v: ')' }] },
+  { tokens: [{ t: ' ', v: '            ' }, { t: 'k', v: 'if' }, { t: ' ', v: ' ' }, { t: ' ', v: 'epoch' }, { t: 'p', v: ' % ' }, { t: 'c', v: '10' }, { t: ' ', v: ' ' }, { t: ' ', v: '==' }, { t: ' ', v: ' ' }, { t: 'c', v: '0' }, { t: 'p', v: ':' }] },
+  { tokens: [{ t: ' ', v: '                ' }, { t: ' ', v: 'log_loss' }, { t: 'p', v: '(' }, { t: ' ', v: 'self' }, { t: 'p', v: ')' }] },
+]
+
+const RESEARCH = [
+  { area: 'AI Safety &amp; Alignment', group: 'Safeguards Lab' },
+  { area: 'Distributed Ledgers', group: 'Protocols Group' },
+  { area: 'Human–Computer Interaction', group: 'Interaction Studio' },
+  { area: 'Quantum Algorithms', group: 'Q-Lab' },
+  { area: 'Robotics &amp; Perception', group: 'Embodied Systems' },
+  { area: 'Programming Languages', group: 'Type Systems Lab' },
+]
+
+function useReveal() {
+  useEffect(() => {
+    const els = document.querySelectorAll('[data-reveal]')
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible')
+            io.unobserve(entry.target)
+          }
+        })
+      },
+      { threshold: 0.15 },
+    )
+    els.forEach((el) => io.observe(el))
+    return () => io.disconnect()
+  }, [])
+}
+
+function usePointerEffects() {
+  useEffect(() => {
+    const onMove = (e) => {
+      const nx = e.clientX / window.innerWidth - 0.5
+      const ny = e.clientY / window.innerHeight - 0.5
+      document.querySelectorAll('[data-depth]').forEach((el) => {
+        const d = Number(el.dataset.depth) || 0
+        el.style.transform = `translate3d(${nx * d}px, ${ny * d}px, 0)`
+      })
+      const card = e.target.closest('[data-tilt]')
+      document.querySelectorAll('[data-tilt]').forEach((c) => {
+        c.style.setProperty('--rx', '0deg')
+        c.style.setProperty('--ry', '0deg')
+      })
+      if (card) {
+        const r = card.getBoundingClientRect()
+        const px = (e.clientX - r.left) / r.width - 0.5
+        const py = (e.clientY - r.top) / r.height - 0.5
+        card.style.setProperty('--rx', `${(-py * 7).toFixed(2)}deg`)
+        card.style.setProperty('--ry', `${(px * 7).toFixed(2)}deg`)
+        card.style.setProperty('--gx', `${((px + 0.5) * 100).toFixed(1)}%`)
+        card.style.setProperty('--gy', `${((py + 0.5) * 100).toFixed(1)}%`)
+      }
+    }
+    window.addEventListener('mousemove', onMove)
+    return () => window.removeEventListener('mousemove', onMove)
+  }, [])
+}
+
+function Cursor() {
+  const dotRef = useRef(null)
+  const ringRef = useRef(null)
+  const [enabled, setEnabled] = useState(false)
+
+  useEffect(() => {
+    const fine = window.matchMedia('(pointer: fine)')
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)')
+    if (!fine.matches || reduced.matches) return
+    setEnabled(true)
+
+    let tx = -100
+    let ty = -100
+    let rx = -100
+    let ry = -100
+    let raf
+
+    const onMove = (e) => {
+      tx = e.clientX
+      ty = e.clientY
+      if (dotRef.current) {
+        dotRef.current.style.transform = `translate3d(${tx - 3}px, ${ty - 3}px, 0)`
+      }
+    }
+
+    const onOver = (e) => {
+      const interactive = e.target.closest('a, button, [data-tilt], .chip, .program, .terminal')
+      if (ringRef.current) ringRef.current.classList.toggle('is-active', Boolean(interactive))
+    }
+
+    const loop = () => {
+      rx += (tx - rx) * 0.18
+      ry += (ty - ry) * 0.18
+      if (ringRef.current) {
+        ringRef.current.style.transform = `translate3d(${rx - 21}px, ${ry - 21}px, 0)`
+      }
+      raf = requestAnimationFrame(loop)
+    }
+
+    window.addEventListener('mousemove', onMove)
+    window.addEventListener('mouseover', onOver)
+    raf = requestAnimationFrame(loop)
+    return () => {
+      window.removeEventListener('mousemove', onMove)
+      window.removeEventListener('mouseover', onOver)
+      cancelAnimationFrame(raf)
+    }
+  }, [])
+
+  if (!enabled) return null
+  return (
+    <>
+      <div className="cursor cursor--dot" ref={dotRef} aria-hidden="true" />
+      <div className="cursor cursor--ring" ref={ringRef} aria-hidden="true" />
+    </>
+  )
+}
 
 function Nav() {
   return (
     <header className="nav">
       <a className="nav__brand" href="#top">
-        alex<span className="nav__brand-accent">.</span>rivera
+        cs<span className="nav__brand-accent">:</span>
+        <span className="nav__brand-slash">//</span>department
       </a>
       <nav className="nav__links" aria-label="Primary">
-        <a href="#about">About</a>
-        <a href="#projects">Projects</a>
-        <a href="#contact">Contact</a>
+        {NAV_LINKS.map((link) => (
+          <a key={link.href} href={link.href}>
+            {link.label}
+          </a>
+        ))}
       </nav>
+      <a className="nav__cta" href="#admissions">
+        Apply now
+      </a>
     </header>
   )
 }
@@ -60,51 +237,379 @@ function Nav() {
 function Hero() {
   return (
     <section className="hero" id="top">
-      <ScrollExpand
-        src={HERO_IMAGE}
-        alt="Vibrant code editor on a screen"
-        title="Alex Rivera"
-        scrollHint="Scroll to explore"
-        scrollDistance={1}
-        holdDistance={0.25}
-        mediaZoom={1.35}
-        useWindowScroll
-      >
-        <h2 className="hero__headline">Every pixel, everywhere.</h2>
-        <p className="hero__sub">
-          I build fast, delightful interfaces for the web — from first idea to final frame.
+      <div className="hero__scene" aria-hidden="true">
+        <Suspense fallback={null}>
+          <Scene />
+        </Suspense>
+      </div>
+      <div className="hero__veil" aria-hidden="true" />
+      <div className="hero__grid" aria-hidden="true" />
+
+      <div className="hero__chips" aria-hidden="true">
+        <div className="chip" data-depth="22">
+          <span className="chip__float">
+            <span className="chip__dot chip__dot--cyan" />
+            <span className="mono">acc 99.1%</span>
+          </span>
+        </div>
+        <div className="chip chip--slow" data-depth="34">
+          <span className="chip__float">
+            <span className="chip__dot chip__dot--pink" />
+            <span className="mono">inference 4.2ms</span>
+          </span>
+        </div>
+        <div className="chip chip--lazy" data-depth="14">
+          <span className="chip__float">
+            <span className="chip__dot chip__dot--green" />
+            <span className="mono">24,312 students online</span>
+          </span>
+        </div>
+      </div>
+
+      <div className="hero__status" data-depth="46" aria-hidden="true">
+        <div className="hero__status-head mono">SYSTEM.STATUS</div>
+        <div className="hero__status-row mono">
+          <span className="pulse-dot pulse-dot--cyan" /> core online
+        </div>
+        <div className="hero__status-row mono">
+          <span className="pulse-dot pulse-dot--green" /> 12/12 nodes
+        </div>
+        <div className="hero__status-row mono">uptime 99.98%</div>
+      </div>
+
+      <div className="hero__content">
+        <p className="hero__eyebrow mono">
+          <span className="hero__prompt">&gt;</span> school of computer science
+          <span className="hero__eyebrow-ver">v4.2</span>
         </p>
-        <a className="hero__cta" href="#projects">
-          See the work
-        </a>
-      </ScrollExpand>
+        <h1 className="hero__title">
+          <span className="hero__title-line">Computer</span>
+          <span className="hero__title-line hero__title-line--stroke">Science</span>
+        </h1>
+        <p className="hero__sub">
+          We turn ideas into systems. Theory, craft, and the courage to build the next layer of
+          the digital world — one commit at a time.
+        </p>
+        <div className="hero__actions">
+          <a className="btn btn--solid" href="#programs">
+            Explore programs <span className="btn__arrow">→</span>
+          </a>
+          <a className="btn btn--ghost" href="#about">
+            How we teach
+          </a>
+        </div>
+        <ul className="hero__facts">
+          <li>
+            <span className="mono">#5</span> ranked program
+          </li>
+          <li>
+            <span className="mono">92%</span> job placement
+          </li>
+          <li>
+            <span className="mono">40+</span> research labs
+          </li>
+        </ul>
+      </div>
+
+      <a className="hero__scroll" href="#about" aria-label="Scroll to content">
+        <span className="hero__scroll-label mono">scroll</span>
+        <span className="hero__scroll-line" aria-hidden="true" />
+      </a>
+    </section>
+  )
+}
+
+function Marquee() {
+  return (
+    <div className="marquee" aria-hidden="true">
+      <div className="marquee__track">
+        {[...MARQUEE, ...MARQUEE].map((item, i) => (
+          <span className="marquee__item mono" key={`${item}-${i}`}>
+            {item}
+          </span>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function CountUp({ value, prefix = '', suffix = '', duration = 1500 }) {
+  const ref = useRef(null)
+  const [display, setDisplay] = useState(0)
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return
+          io.disconnect()
+          if (reduced) {
+            setDisplay(value)
+            return
+          }
+          const start = performance.now()
+          const tick = (now) => {
+            const p = Math.min((now - start) / duration, 1)
+            const eased = 1 - Math.pow(1 - p, 3)
+            setDisplay(Math.round(value * eased))
+            if (p < 1) requestAnimationFrame(tick)
+          }
+          requestAnimationFrame(tick)
+        })
+      },
+      { threshold: 0.4 },
+    )
+    io.observe(el)
+    return () => io.disconnect()
+  }, [value, duration])
+
+  return (
+    <span ref={ref}>
+      {prefix}
+      {display.toLocaleString()}
+      {suffix}
+    </span>
+  )
+}
+
+function Stats() {
+  return (
+    <section className="stats">
+      {STATS.map((stat, i) => (
+        <div className="stat" key={stat.label} data-reveal style={{ '--rd': `${i * 0.08}s` }}>
+          <div className="stat__index mono">0{i + 1}</div>
+          <div className="stat__value mono">
+            <CountUp value={stat.value} prefix={stat.prefix} suffix={stat.suffix} />
+          </div>
+          <div className="stat__label" dangerouslySetInnerHTML={{ __html: stat.label }} />
+        </div>
+      ))}
     </section>
   )
 }
 
 function About() {
   return (
-    <section className="section" id="about">
+    <section className="section section--about" id="about">
+      <div className="about__backdrop" aria-hidden="true">
+        <Topography
+          lowColor="#0b0f2e"
+          midColor="#22d3ee"
+          highColor="#8b7bff"
+          speed={0.3}
+          morphAmount={2.6}
+          morphSpeed={0.04}
+          bands={3}
+          thickness={0.015}
+          scale={0.9}
+          glow={0.35}
+          colorMode="elevation"
+          contrast={2.6}
+          brightness={0.9}
+          fillBands={false}
+          opacity={0.75}
+          grain
+          grainIntensity={0.04}
+          mouseInteraction={false}
+        />
+      </div>
       <div className="section__inner">
-        <div className="section__label">About</div>
+        <div className="section__head" data-reveal>
+          <p className="section__eyebrow mono">
+            <span className="section__eyebrow-num">01</span> about
+          </p>
+          <h2 className="section__title">
+            A field built on questions,
+            <br />
+            powered by <span className="section__title-accent">curiosity.</span>
+          </h2>
+        </div>
         <div className="about">
-          <div className="about__text">
-            <h2>
-              Design-minded engineer, detail-obsessed builder.
-            </h2>
+          <div className="about__text" data-reveal style={{ '--rd': '0.1s' }}>
             <p>
-              I’m a full-stack developer with a soft spot for the front of the stack. For the
-              last six years I’ve shipped products used by millions — dashboards, storefronts,
-              and everything between.
+              Computer science is not about screens — it&apos;s about abstraction, logic, and
+              the joy of making machines think. For more than three decades we&apos;ve taught
+              students to reason rigorously about computation and to build software that
+              outlives the hype cycle.
             </p>
             <p>
-              When I’m not shipping, I’m tinkering with scroll-driven motion, contributing to
-              open source, or writing about what I learn along the way.
+              Our classrooms run on the same principles we teach: hands-on, iterative, and
+              unafraid of the blank page. Whether you arrive fluent in a dozen languages or have
+              never written a line of code, there is a path here for you.
             </p>
+            <ul className="about__features">
+              {FEATURES.map((feature, i) => (
+                <li key={feature} data-reveal style={{ '--rd': `${0.05 + i * 0.07}s` }}>
+                  <span className="about__feature-num mono">0{i + 1}</span>
+                  {feature}
+                </li>
+              ))}
+            </ul>
           </div>
-          <ul className="skills" aria-label="Skills">
-            {SKILLS.map((skill) => (
-              <li key={skill}>{skill}</li>
+          <div className="terminal__wrap" data-reveal style={{ '--rd': '0.2s' }}>
+            <div className="terminal" data-tilt aria-label="Example of the kind of code students write">
+              <div className="terminal__bar">
+                <span className="terminal__dot terminal__dot--red" />
+                <span className="terminal__dot terminal__dot--yellow" />
+                <span className="terminal__dot terminal__dot--green" />
+                <span className="terminal__title mono">cslab — evolve.py</span>
+              </div>
+              <pre className="terminal__body">
+                <code>
+                  {CODE_LINES.map((line, i) => (
+                    <div key={i}>
+                      {line.tokens.map((tok, j) => (
+                        <span className={`tok tok--${tok.t}`} key={j}>
+                          {tok.v}
+                        </span>
+                      ))}
+                    </div>
+                  ))}
+                </code>
+              </pre>
+              <div className="terminal__status mono">
+                <span className="terminal__blink">▍</span> 12 cores · inference @ 4.2ms
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function Programs() {
+  return (
+    <section className="section section--alt section--programs" id="programs">
+      <div className="programs__backdrop" aria-hidden="true">
+        <Ferrofluid
+          colors={FLUID_COLORS}
+          speed={0.4}
+          scale={1.6}
+          turbulence={1}
+          fluidity={0.14}
+          rimWidth={0.24}
+          sharpness={1.5}
+          shimmer={0.7}
+          glow={3}
+          flowDirection="down"
+          opacity={0.9}
+          mouseInteraction
+          mouseStrength={1.2}
+          mouseRadius={0.28}
+          mouseDampening={0.12}
+        />
+      </div>
+      <div className="section__inner">
+        <div className="section__head" data-reveal>
+          <p className="section__eyebrow mono">
+            <span className="section__eyebrow-num">02</span> programs
+          </p>
+          <h2 className="section__title">
+            Six tracks. <span className="section__title-outline">One obsession.</span>
+          </h2>
+          <p className="section__lede">
+            Every specialization shares a common core — algorithms, systems, and software craft —
+            then branches into the frontier you care about most.
+          </p>
+        </div>
+        <div className="programs">
+          {PROGRAMS.map((program, i) => (
+            <div
+              className="program__wrap"
+              key={program.index}
+              data-reveal
+              style={{ '--rd': `${(i % 3) * 0.09}s` }}
+            >
+              <article
+                className="program"
+                data-tilt
+                style={{ '--accent': program.accent }}
+              >
+                <div className="program__top">
+                  <span className="program__index mono">[{program.index}]</span>
+                  <span className="program__glyph" aria-hidden="true">
+                    {program.title.charAt(0)}
+                  </span>
+                </div>
+                <h3 className="program__title">{program.title}</h3>
+                <p className="program__blurb">{program.blurb}</p>
+                <ul className="program__tags">
+                  {program.tags.map((tag) => (
+                    <li key={tag}>{tag}</li>
+                  ))}
+                </ul>
+                <a className="program__link mono" href="#admissions">
+                  view track <span>↗</span>
+                </a>
+              </article>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function Research() {
+  return (
+    <section className="section section--research" id="research">
+      <div className="research__backdrop" aria-hidden="true">
+        <Lightfall
+          colors={['#22d3ee', '#8b7bff', '#ff5ce1']}
+          backgroundColor="#0A29FF"
+          speed={1}
+          streakCount={12}
+          streakWidth={1.2}
+          streakLength={1}
+          glow={1.2}
+          density={1.2}
+          twinkle={1}
+          zoom={2}
+          backgroundGlow={1.1}
+          opacity={1}
+          mouseInteraction
+          mouseStrength={1}
+          mouseRadius={0.6}
+          mouseDampening={0.15}
+        />
+      </div>
+      <div className="section__inner">
+        <div className="section__head" data-reveal>
+          <p className="section__eyebrow mono">
+            <span className="section__eyebrow-num">03</span> research
+          </p>
+          <h2 className="section__title">
+            Questions that won&apos;t
+            <br />
+            answer <span className="section__title-accent">themselves.</span>
+          </h2>
+        </div>
+        <div className="research">
+          <div className="research__text" data-reveal style={{ '--rd': '0.1s' }}>
+            <p>
+              Undergraduates work shoulder-to-shoulder with PhD students and faculty across six
+              flagship labs. Nearly half of our students publish before they graduate.
+            </p>
+            <p>
+              From hardening the protocols the internet runs on, to making machine learning
+              auditable, to asking what a computer <em>should</em> be allowed to do — our labs
+              are where the next decade of computing gets sketched out.
+            </p>
+            <a className="research__cta mono" href="#admissions">
+              join a lab <span>→</span>
+            </a>
+          </div>
+          <ul className="research__list">
+            {RESEARCH.map((item, i) => (
+              <li key={item.area} data-reveal style={{ '--rd': `${i * 0.05}s` }}>
+                <span className="research__index mono">0{i + 1}</span>
+                <span className="research__area" dangerouslySetInnerHTML={{ __html: item.area }} />
+                <span className="research__group mono">{item.group}</span>
+              </li>
             ))}
           </ul>
         </div>
@@ -113,74 +618,102 @@ function About() {
   )
 }
 
-function Projects() {
+function Admissions() {
   return (
-    <section className="section" id="projects">
+    <section className="section section--cta" id="admissions">
+      <div className="section__words" aria-hidden="true">
+        <span>DREAM</span>
+        <span>DEBUG</span>
+        <span>DEPLOY</span>
+      </div>
       <div className="section__inner">
-        <div className="section__label">Selected work</div>
-        <h2 className="section__title">Projects</h2>
-        <div className="projects">
-          {PROJECTS.map((project) => (
-            <article className="project" key={project.title}>
-              <a className="project__media" href="#top">
-                <img src={project.image} alt="" loading="lazy" />
-              </a>
-              <div className="project__body">
-                <h3>{project.title}</h3>
-                <p>{project.description}</p>
-                <ul className="project__tags">
-                  {project.tags.map((tag) => (
-                    <li key={tag}>{tag}</li>
-                  ))}
-                </ul>
-              </div>
-            </article>
-          ))}
+        <p className="section__eyebrow mono" data-reveal>
+          <span className="section__eyebrow-num">04</span> admissions
+        </p>
+        <h2 className="section__title" data-reveal style={{ '--rd': '0.08s' }}>
+          Fall intake is <span className="section__title-accent">open.</span>
+        </h2>
+        <p className="section__lede" data-reveal style={{ '--rd': '0.16s' }}>
+          Applications close <span className="mono">March 1</span>. Scholarships cover up to
+          <span className="mono"> 100%</span> of tuition for exceptional candidates.
+        </p>
+        <div className="section__actions" data-reveal style={{ '--rd': '0.24s' }}>
+          <AnimatedButton as="a" href="mailto:admissions@csdepartment.dev">
+            Start your application <span className="btn__arrow">→</span>
+          </AnimatedButton>
+          <a className="btn btn--ghost" href="#about">
+            Visit a class
+          </a>
         </div>
       </div>
     </section>
   )
 }
 
-function Contact() {
+function Footer() {
   return (
-    <section className="section section--contact" id="contact">
-      <div className="section__inner">
-        <div className="section__label">Contact</div>
-        <h2 className="section__title">Let&apos;s build something great.</h2>
-        <p className="contact__blurb">
-          I&apos;m currently open to new freelance projects and full-time roles. Tell me what
-          you&apos;re making.
-        </p>
-        <div className="contact__actions">
-          <a className="contact__button" href="mailto:hello@alexrivera.dev">
-            hello@alexrivera.dev
+    <footer className="footer">
+      <div className="footer__grid">
+        <div className="footer__brand">
+          <a className="nav__brand" href="#top">
+            cs<span className="nav__brand-accent">:</span>
+            <span className="nav__brand-slash">//</span>department
           </a>
-          <a className="contact__button contact__button--ghost" href="#top">
-            GitHub
-          </a>
-          <a className="contact__button contact__button--ghost" href="#top">
-            LinkedIn
-          </a>
+          <p>School of Computer Science — invent the next layer.</p>
+          <div className="footer__clock mono">
+            <span className="pulse-dot pulse-dot--green" /> all systems operational
+          </div>
+        </div>
+        <div className="footer__col">
+          <h4 className="mono">Explore</h4>
+          {NAV_LINKS.map((link) => (
+            <a key={link.href} href={link.href}>
+              {link.label}
+            </a>
+          ))}
+        </div>
+        <div className="footer__col">
+          <h4 className="mono">Connect</h4>
+          <a href="#top">GitHub</a>
+          <a href="#top">LinkedIn</a>
+          <a href="mailto:hello@csdepartment.dev">hello@csdepartment.dev</a>
+        </div>
+        <div className="footer__col">
+          <h4 className="mono">Campus</h4>
+          <span>42 Render Street</span>
+          <span>Circuit City, EC 90001</span>
+          <span className="mono">+1 (555) 010-4242</span>
         </div>
       </div>
-    </section>
+      <div className="footer__bar mono">
+        <span>&copy; {new Date().getFullYear()} School of Computer Science.</span>
+        <span>
+          built with react · three.js · <span className="footer__angle">&lt;curiosity /&gt;</span>
+        </span>
+      </div>
+    </footer>
   )
 }
 
 function App() {
+  useReveal()
+  usePointerEffects()
+
   return (
     <div className="site">
+      <div className="grain" aria-hidden="true" />
+      <Cursor />
       <Nav />
       <main>
         <Hero />
+        <Marquee />
+        <Stats />
         <About />
-        <Projects />
-        <Contact />
+        <Programs />
+        <Research />
+        <Admissions />
       </main>
-      <footer className="footer">
-        <span>&copy; {new Date().getFullYear()} Alex Rivera. Built with care.</span>
-      </footer>
+      <Footer />
     </div>
   )
 }
