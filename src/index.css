@@ -113,21 +113,21 @@ ul {
   }
 
   .cursor--dot {
-    width: 6px;
-    height: 6px;
+    width: 4px;
+    height: 4px;
     background: #fff;
   }
 
   .cursor--ring {
-    width: 42px;
-    height: 42px;
+    width: 16px;
+    height: 16px;
     border: 1px solid rgba(255, 255, 255, 0.55);
     transition: width 0.25s ease, height 0.25s ease, border-color 0.25s ease;
   }
 
   .cursor--ring.is-active {
-    width: 68px;
-    height: 68px;
+    width: 24px;
+    height: 24px;
     border-color: var(--cyan);
   }
 }

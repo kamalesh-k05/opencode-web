@@ -19,6 +19,11 @@
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--line);
+  transition: transform 0.35s ease;
+}
+
+.nav--hidden {
+  transform: translateY(-100%);
 }
 
 .nav::after {
@@ -171,7 +176,7 @@
 }
 
 .hero__title {
-  font-size: clamp(3.6rem, 10vw, 8.4rem);
+  font-size: clamp(3rem, 8.5vw, 7rem);
   font-weight: 700;
   letter-spacing: -0.035em;
   line-height: 0.92;

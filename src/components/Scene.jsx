@@ -282,7 +282,7 @@ function CursorLight({ pointerRef }) {
   )
 }
 
-function CursorTrail({ pointerRef, count = 42 }) {
+function CursorTrail({ pointerRef, count = 30 }) {
   const mesh = useRef()
   const dummy = useMemo(() => new THREE.Object3D(), [])
   const positions = useMemo(() => {
@@ -308,7 +308,7 @@ function CursorTrail({ pointerRef, count = 42 }) {
     for (let i = 0; i < count; i += 1) {
       const scale = 1 - i / count
       dummy.position.copy(positions[i])
-      dummy.scale.setScalar(0.1 + scale * 0.42)
+      dummy.scale.setScalar(0.05 + scale * 0.14)
       dummy.updateMatrix()
       mesh.current.setMatrixAt(i, dummy.matrix)
     }

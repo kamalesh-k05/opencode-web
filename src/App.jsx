@@ -1,5 +1,6 @@
 import { lazy, Suspense, useEffect, useRef, useState } from 'react'
 import AnimatedButton from './components/AnimatedButton'
+import CountUp from './components/CountUp'
 import Topography from './components/Topography'
 import Ferrofluid from './components/Ferrofluid'
 import Lightfall from './components/Lightfall'
@@ -176,7 +177,7 @@ function Cursor() {
       tx = e.clientX
       ty = e.clientY
       if (dotRef.current) {
-        dotRef.current.style.transform = `translate3d(${tx - 3}px, ${ty - 3}px, 0)`
+        dotRef.current.style.transform = `translate3d(${tx - 2.5}px, ${ty - 2.5}px, 0)`
       }
     }
 
@@ -189,7 +190,7 @@ function Cursor() {
       rx += (tx - rx) * 0.18
       ry += (ty - ry) * 0.18
       if (ringRef.current) {
-        ringRef.current.style.transform = `translate3d(${rx - 21}px, ${ry - 21}px, 0)`
+        ringRef.current.style.transform = `translate3d(${rx - 8}px, ${ry - 8}px, 0)`
       }
       raf = requestAnimationFrame(loop)
     }
@@ -213,9 +214,9 @@ function Cursor() {
   )
 }
 
-function Nav() {
+function Nav({ hidden = false }) {
   return (
-    <header className="nav">
+    <header className={`nav${hidden ? ' nav--hidden' : ''}`}>
       <a className="nav__brand" href="#top">
         cs<span className="nav__brand-accent">:</span>
         <span className="nav__brand-slash">//</span>department
@@ -333,48 +334,6 @@ function Marquee() {
   )
 }
 
-function CountUp({ value, prefix = '', suffix = '', duration = 1500 }) {
-  const ref = useRef(null)
-  const [display, setDisplay] = useState(0)
-
-  useEffect(() => {
-    const el = ref.current
-    if (!el) return
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return
-          io.disconnect()
-          if (reduced) {
-            setDisplay(value)
-            return
-          }
-          const start = performance.now()
-          const tick = (now) => {
-            const p = Math.min((now - start) / duration, 1)
-            const eased = 1 - Math.pow(1 - p, 3)
-            setDisplay(Math.round(value * eased))
-            if (p < 1) requestAnimationFrame(tick)
-          }
-          requestAnimationFrame(tick)
-        })
-      },
-      { threshold: 0.4 },
-    )
-    io.observe(el)
-    return () => io.disconnect()
-  }, [value, duration])
-
-  return (
-    <span ref={ref}>
-      {prefix}
-      {display.toLocaleString()}
-      {suffix}
-    </span>
-  )
-}
-
 function Stats() {
   return (
     <section className="stats">
@@ -382,7 +341,9 @@ function Stats() {
         <div className="stat" key={stat.label} data-reveal style={{ '--rd': `${i * 0.08}s` }}>
           <div className="stat__index mono">0{i + 1}</div>
           <div className="stat__value mono">
-            <CountUp value={stat.value} prefix={stat.prefix} suffix={stat.suffix} />
+            {stat.prefix}
+            <CountUp to={stat.value} duration={1.5} separator="," />
+            {stat.suffix}
           </div>
           <div className="stat__label" dangerouslySetInnerHTML={{ __html: stat.label }} />
         </div>
@@ -699,11 +660,25 @@ function App() {
   useReveal()
   usePointerEffects()
 
+  const [navHidden, setNavHidden] = useState(false)
+
+  useEffect(() => {
+    let lastY = window.scrollY
+    const onScroll = () => {
+      const y = window.scrollY
+      if (y < 80 || y <= lastY) setNavHidden(false)
+      else setNavHidden(true)
+      lastY = y
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
   return (
     <div className="site">
       <div className="grain" aria-hidden="true" />
       <Cursor />
-      <Nav />
+      <Nav hidden={navHidden} />
       <main>
         <Hero />
         <Marquee />
