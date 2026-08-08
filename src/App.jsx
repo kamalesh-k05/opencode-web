@@ -1,6 +1,9 @@
 import { lazy, Suspense, useEffect, useRef, useState } from 'react'
-import AnimatedButton from './components/AnimatedButton'
-import CountUp from './components/CountUp'
+import FoldText from './components/FoldText'
+import LightTunnel from './components/LightTunnel'
+import Orb from './components/Orb'
+import SpecularButton from './components/SpecularButton'
+import Threads from './components/Threads'
 import Topography from './components/Topography'
 import Ferrofluid from './components/Ferrofluid'
 import Lightfall from './components/Lightfall'
@@ -12,7 +15,7 @@ const NAV_LINKS = [
   { label: 'About', href: '#about' },
   { label: 'Programs', href: '#programs' },
   { label: 'Research', href: '#research' },
-  { label: 'Admissions', href: '#admissions' },
+  { label: 'Contact', href: '#contact' },
 ]
 
 const MARQUEE = [
@@ -71,13 +74,6 @@ const PROGRAMS = [
     tags: ['Rendering', 'GPU', 'Simulation'],
     accent: '#fbbf24',
   },
-]
-
-const STATS = [
-  { value: 92, prefix: '', suffix: '%', label: 'job placement within 6 months' },
-  { value: 40, prefix: '', suffix: '+', label: 'research labs &amp; active groups' },
-  { value: 1800, prefix: '', suffix: '', label: 'undergraduate students' },
-  { value: 5, prefix: '#', suffix: '', label: 'national program ranking' },
 ]
 
 const FLUID_COLORS = ['#22d3ee', '#8b7bff', '#ff5ce1']
@@ -228,9 +224,6 @@ function Nav({ hidden = false }) {
           </a>
         ))}
       </nav>
-      <a className="nav__cta" href="#admissions">
-        Apply now
-      </a>
     </header>
   )
 }
@@ -331,24 +324,6 @@ function Marquee() {
         ))}
       </div>
     </div>
-  )
-}
-
-function Stats() {
-  return (
-    <section className="stats">
-      {STATS.map((stat, i) => (
-        <div className="stat" key={stat.label} data-reveal style={{ '--rd': `${i * 0.08}s` }}>
-          <div className="stat__index mono">0{i + 1}</div>
-          <div className="stat__value mono">
-            {stat.prefix}
-            <CountUp to={stat.value} duration={1.5} separator="," />
-            {stat.suffix}
-          </div>
-          <div className="stat__label" dangerouslySetInnerHTML={{ __html: stat.label }} />
-        </div>
-      ))}
-    </section>
   )
 }
 
@@ -503,7 +478,7 @@ function Programs() {
                     <li key={tag}>{tag}</li>
                   ))}
                 </ul>
-                <a className="program__link mono" href="#admissions">
+                <a className="program__link mono" href="#contact">
                   view track <span>↗</span>
                 </a>
               </article>
@@ -560,7 +535,7 @@ function Research() {
               auditable, to asking what a computer <em>should</em> be allowed to do — our labs
               are where the next decade of computing gets sketched out.
             </p>
-            <a className="research__cta mono" href="#admissions">
+            <a className="research__cta mono" href="#contact">
               join a lab <span>→</span>
             </a>
           </div>
@@ -579,32 +554,73 @@ function Research() {
   )
 }
 
-function Admissions() {
+function Contact() {
   return (
-    <section className="section section--cta" id="admissions">
+    <section className="section section--cta" id="contact">
+      <div className="contact__bg" aria-hidden="true">
+        <Threads color={[0.72, 0.62, 1]} amplitude={1} distance={0} enableMouseInteraction />
+      </div>
       <div className="section__words" aria-hidden="true">
-        <span>DREAM</span>
-        <span>DEBUG</span>
-        <span>DEPLOY</span>
+        <span>BUILD</span>
+        <span>BREAK</span>
+        <span>REPEAT</span>
       </div>
       <div className="section__inner">
         <p className="section__eyebrow mono" data-reveal>
-          <span className="section__eyebrow-num">04</span> admissions
+          <span className="section__eyebrow-num">04</span> contact
         </p>
         <h2 className="section__title" data-reveal style={{ '--rd': '0.08s' }}>
-          Fall intake is <span className="section__title-accent">open.</span>
+          <FoldText
+            text={"Let's build the\nnext layer."}
+            splitBy="line"
+            hinge="top"
+            trigger="scroll"
+            duration={0.65}
+            stagger={0.16}
+            ease="power3.out"
+            perspective={900}
+            creaseShading={0.55}
+            fontSize="clamp(2.6rem, 6.5vw, 5.2rem)"
+            fontWeight={800}
+            color="var(--text-h)"
+          />
         </h2>
         <p className="section__lede" data-reveal style={{ '--rd': '0.16s' }}>
-          Applications close <span className="mono">March 1</span>. Scholarships cover up to
-          <span className="mono"> 100%</span> of tuition for exceptional candidates.
+          Questions, partnerships, or a tour of our labs — the department is always
+          <span className="mono"> open to a conversation.</span>
         </p>
         <div className="section__actions" data-reveal style={{ '--rd': '0.24s' }}>
-          <AnimatedButton as="a" href="mailto:admissions@csdepartment.dev">
-            Start your application <span className="btn__arrow">→</span>
-          </AnimatedButton>
-          <a className="btn btn--ghost" href="#about">
-            Visit a class
-          </a>
+          <SpecularButton
+            size="lg"
+            radius={18}
+            tint="#ffffff"
+            tintOpacity={0}
+            blur={0}
+            textColor="#f5f5f5"
+            lineColor="#ffffff"
+            baseColor="#8b7bff"
+            intensity={1}
+            shineSize={10}
+            shineFade={40}
+            thickness={1}
+            speed={0.35}
+            followMouse
+            proximity={250}
+            autoAnimate={false}
+            onClick={() => window.open('https://github.com/kamalesh-k05', '_blank', 'noreferrer')}
+          >
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 16 16"
+              fill="currentColor"
+              style={{ marginRight: '0.55rem', verticalAlign: '-3px' }}
+              aria-hidden="true"
+            >
+              <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z" />
+            </svg>
+            GitHub
+          </SpecularButton>
         </div>
       </div>
     </section>
@@ -614,6 +630,41 @@ function Admissions() {
 function Footer() {
   return (
     <footer className="footer">
+      <div className="footer__tunnel" aria-hidden="true">
+        <LightTunnel
+          cableColor="#8b7bff"
+          pulseColor="#22d3ee"
+          tunnelColor="#5227FF"
+          tunnelOpacity={0}
+          speed={0.1}
+          flowDirection="outward"
+          pulseSpeed={2}
+          pulseLength={0.28}
+          pulseBlend={1}
+          pulseWidth={1}
+          cableCount={20}
+          thickness={0.35}
+          rimWidth={0.15}
+          waviness={0.3}
+          sway={0.5}
+          size={1.0}
+          centerX={0.0}
+          centerY={0.0}
+          glow={1.0}
+          fadeNear={0.5}
+          fadeFar={2}
+          brightness={0.7}
+          colorVariance
+          grain
+          grainIntensity={0.05}
+          opacity={0.35}
+          mouseInteraction
+          mouseStrength={0.08}
+        />
+      </div>
+      <div className="footer__orb" aria-hidden="true">
+        <Orb hue={0} hoverIntensity={0.4} rotateOnHover backgroundColor="#0a0c18" />
+      </div>
       <div className="footer__grid">
         <div className="footer__brand">
           <a className="nav__brand" href="#top">
@@ -635,23 +686,19 @@ function Footer() {
         </div>
         <div className="footer__col">
           <h4 className="mono">Connect</h4>
-          <a href="#top">GitHub</a>
+          <a href="https://github.com/kamalesh-k05" target="_blank" rel="noreferrer">
+            GitHub
+          </a>
           <a href="#top">LinkedIn</a>
-          <a href="mailto:hello@csdepartment.dev">hello@csdepartment.dev</a>
-        </div>
-        <div className="footer__col">
-          <h4 className="mono">Campus</h4>
-          <span>42 Render Street</span>
-          <span>Circuit City, EC 90001</span>
-          <span className="mono">+1 (555) 010-4242</span>
         </div>
       </div>
       <div className="footer__bar mono">
-        <span>&copy; {new Date().getFullYear()} School of Computer Science.</span>
+        <span>&copy; {new Date().getFullYear()} CS Department. All rights reserved.</span>
         <span>
           built with react · three.js · <span className="footer__angle">&lt;curiosity /&gt;</span>
         </span>
       </div>
+      <div className="footer__credit mono">built by kamalesh k</div>
     </footer>
   )
 }
@@ -682,11 +729,10 @@ function App() {
       <main>
         <Hero />
         <Marquee />
-        <Stats />
         <About />
         <Programs />
         <Research />
-        <Admissions />
+        <Contact />
       </main>
       <Footer />
     </div>
