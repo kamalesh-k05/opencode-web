@@ -1,0 +1,93 @@
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+@font-face {
+  font-family: 'PP Neue York Normal Medium';
+  src: url('https://framerusercontent.com/assets/qOUJ7UXQW0tOsLf70gpNAHn962I.woff2')
+    format('woff2');
+  font-display: swap;
+  font-style: normal;
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: 'PP Editorial New Ultralight';
+  src: url('https://framerusercontent.com/assets/knnZZXK2bSTh8I1xCPC07m2x5c.woff2')
+    format('woff2');
+  font-display: swap;
+  font-style: normal;
+  font-weight: 200;
+}
+
+:root {
+  --white: #fff;
+  --navy: #001938;
+  --ink: #3c3c3c;
+  --gray: #c6c6c6;
+  --line: #e3e3e3;
+  --terracotta: #cc7760;
+  --terracotta-2: #cd7760;
+  --brown: #3f1f12;
+  --cream: #f1eae1;
+  --mist: #ebebed;
+  --taupe: #9e806e;
+  --sky-start: #5f93db;
+  --sky-end: #fff0e1;
+
+  --serif: 'EB Garamond', Georgia, 'Times New Roman', serif;
+  --display: 'PP Neue York Normal Medium', Georgia, serif;
+  --ultra: 'PP Editorial New Ultralight', Georgia, serif;
+  --sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+html,
+body {
+  overflow-x: clip;
+}
+
+body {
+  background: var(--white);
+  color: var(--ink);
+  font: 15px/1.5 var(--sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: inherit;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+::selection {
+  background: var(--navy);
+  color: var(--white);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
