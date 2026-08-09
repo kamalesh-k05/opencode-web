@@ -1,4 +1,6 @@
 import { lazy, Suspense, useEffect, useRef, useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import Lenis from 'lenis'
 import FoldText from './components/FoldText'
 import LightTunnel from './components/LightTunnel'
 import Orb from './components/Orb'
@@ -7,6 +9,9 @@ import Threads from './components/Threads'
 import Topography from './components/Topography'
 import Ferrofluid from './components/Ferrofluid'
 import Lightfall from './components/Lightfall'
+import MobileMenu from './components/MobileMenu'
+import PillNav from './components/PillNav'
+import LiquidFilterPill from './components/LiquidFilterPill'
 import './App.css'
 
 const Scene = lazy(() => import('./components/Scene'))
@@ -31,10 +36,13 @@ const MARQUEE = [
   'Cloud &amp; DevOps',
 ]
 
+const PROGRAM_CATEGORIES = ['All', 'AI & ML', 'Systems & Security', 'Data & Analytics', 'Graphics & Media']
+
 const PROGRAMS = [
   {
     index: '01',
     title: 'Artificial Intelligence',
+    category: 'AI & ML',
     blurb: 'Neural networks, reinforcement learning, and the ethics of intelligent machines.',
     tags: ['Machine Learning', 'NLP', 'Computer Vision'],
     accent: '#ff5ce1',
@@ -42,6 +50,7 @@ const PROGRAMS = [
   {
     index: '02',
     title: 'Cybersecurity',
+    category: 'Systems & Security',
     blurb: 'Defend modern infrastructure — from secure cryptography to offensive red-teaming.',
     tags: ['Cryptography', 'Networks', 'Forensics'],
     accent: '#22d3ee',
@@ -49,6 +58,7 @@ const PROGRAMS = [
   {
     index: '03',
     title: 'Data Science',
+    category: 'Data & Analytics',
     blurb: 'Turn raw streams of data into decisions, models, and stories that matter.',
     tags: ['Statistics', 'Databases', 'Visualization'],
     accent: '#4ade80',
@@ -56,6 +66,7 @@ const PROGRAMS = [
   {
     index: '04',
     title: 'Software Engineering',
+    category: 'Systems & Security',
     blurb: 'Design and ship reliable systems at scale — architecture, testing, and team craft.',
     tags: ['Systems Design', 'DevOps', 'Open Source'],
     accent: '#60a5fa',
@@ -63,6 +74,7 @@ const PROGRAMS = [
   {
     index: '05',
     title: 'Systems &amp; Networks',
+    category: 'Systems & Security',
     blurb: 'The invisible backbone: operating systems, distributed computing, and the internet.',
     tags: ['OS', 'Compilers', 'Distributed Systems'],
     accent: '#8b7bff',
@@ -70,6 +82,7 @@ const PROGRAMS = [
   {
     index: '06',
     title: 'Graphics &amp; Games',
+    category: 'Graphics & Media',
     blurb: 'Real-time rendering, simulation, and the math that makes pixels move.',
     tags: ['Rendering', 'GPU', 'Simulation'],
     accent: '#fbbf24',
@@ -210,7 +223,7 @@ function Cursor() {
   )
 }
 
-function Nav({ hidden = false }) {
+function Nav({ hidden = false, onOpenMobileMenu }) {
   return (
     <header className={`nav${hidden ? ' nav--hidden' : ''}`}>
       <a className="nav__brand" href="#top">
@@ -224,6 +237,20 @@ function Nav({ hidden = false }) {
           </a>
         ))}
       </nav>
+      <a className="nav__cta" href="#contact">
+        Apply Now →
+      </a>
+      <button
+        className="nav__hamburger"
+        onClick={onOpenMobileMenu}
+        aria-label="Open navigation menu"
+      >
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+          <line x1="3" y1="6" x2="21" y2="6" />
+          <line x1="3" y1="12" x2="21" y2="12" />
+          <line x1="3" y1="18" x2="21" y2="18" />
+        </svg>
+      </button>
     </header>
   )
 }
@@ -328,6 +355,41 @@ function Marquee() {
 }
 
 function About() {
+  const [isRunning, setIsRunning] = useState(false)
+  const [copied, setCopied] = useState(false)
+  const [logs, setLogs] = useState([])
+
+  const handleRun = () => {
+    if (isRunning) return
+    setIsRunning(true)
+    const now = new Date().toLocaleTimeString([], { hour12: false })
+    setLogs([{ time: now, text: '▶ Init NeuralCore training pipeline...' }])
+
+    setTimeout(() => {
+      setLogs((prev) => [...prev, { time: new Date().toLocaleTimeString([], { hour12: false }), text: '⚡ Allocated CUDA memory (16GB VRAM)' }])
+    }, 600)
+
+    setTimeout(() => {
+      setLogs((prev) => [...prev, { time: new Date().toLocaleTimeString([], { hour12: false }), text: 'Epoch 25/100 | Loss: 0.412 | Acc: 88.4%' }])
+    }, 1300)
+
+    setTimeout(() => {
+      setLogs((prev) => [...prev, { time: new Date().toLocaleTimeString([], { hour12: false }), text: 'Epoch 100/100 | Loss: 0.008 | Acc: 99.4%' }])
+    }, 2000)
+
+    setTimeout(() => {
+      setLogs((prev) => [...prev, { time: new Date().toLocaleTimeString([], { hour12: false }), text: '✓ Model optimization complete & exported!' }])
+      setIsRunning(false)
+    }, 2600)
+  }
+
+  const handleCopy = () => {
+    const rawCode = `class NeuralCore:\n    def train(self, data):\n        "learning rate" = 1e-3\n        for epoch in range(100):\n            self.backward(data)\n            if epoch % 10 == 0:\n                log_loss(self)`
+    navigator.clipboard.writeText(rawCode)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
+
   return (
     <section className="section section--about" id="about">
       <div className="about__backdrop" aria-hidden="true">
@@ -406,8 +468,34 @@ function About() {
                   ))}
                 </code>
               </pre>
+
+              {logs.length > 0 && (
+                <div className="terminal__logs">
+                  {logs.map((log, index) => (
+                    <div className="terminal__log-line" key={index}>
+                      <span className="terminal__log-time">[{log.time}]</span>
+                      <span>{log.text}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+
               <div className="terminal__status mono">
-                <span className="terminal__blink">▍</span> 12 cores · inference @ 4.2ms
+                <div>
+                  <span className="terminal__blink">▍</span> {isRunning ? 'training active...' : '12 cores · idle'}
+                </div>
+                <div className="terminal__actions">
+                  <button className="terminal__btn" onClick={handleCopy}>
+                    {copied ? '✓ Copied' : 'Copy'}
+                  </button>
+                  <button
+                    className="terminal__btn terminal__btn--run"
+                    onClick={handleRun}
+                    disabled={isRunning}
+                  >
+                    {isRunning ? 'Running...' : '▶ Run Code'}
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -418,6 +506,12 @@ function About() {
 }
 
 function Programs() {
+  const [activeCategory, setActiveCategory] = useState('All')
+
+  const filteredPrograms = activeCategory === 'All'
+    ? PROGRAMS
+    : PROGRAMS.filter((p) => p.category === activeCategory)
+
   return (
     <section className="section section--alt section--programs" id="programs">
       <div className="programs__backdrop" aria-hidden="true">
@@ -452,38 +546,55 @@ function Programs() {
             then branches into the frontier you care about most.
           </p>
         </div>
-        <div className="programs">
-          {PROGRAMS.map((program, i) => (
-            <div
-              className="program__wrap"
-              key={program.index}
-              data-reveal
-              style={{ '--rd': `${(i % 3) * 0.09}s` }}
-            >
-              <article
-                className="program"
-                data-tilt
-                style={{ '--accent': program.accent }}
-              >
-                <div className="program__top">
-                  <span className="program__index mono">[{program.index}]</span>
-                  <span className="program__glyph" aria-hidden="true">
-                    {program.title.charAt(0)}
-                  </span>
-                </div>
-                <h3 className="program__title">{program.title}</h3>
-                <p className="program__blurb">{program.blurb}</p>
-                <ul className="program__tags">
-                  {program.tags.map((tag) => (
-                    <li key={tag}>{tag}</li>
-                  ))}
-                </ul>
-                <a className="program__link mono" href="#contact">
-                  view track <span>↗</span>
-                </a>
-              </article>
-            </div>
+
+        <div className="programs__filters" data-reveal>
+          {PROGRAM_CATEGORIES.map((cat) => (
+            <LiquidFilterPill
+              key={cat}
+              label={cat}
+              isActive={activeCategory === cat}
+              onClick={() => setActiveCategory(cat)}
+            />
           ))}
+        </div>
+
+        <div className="programs">
+          <AnimatePresence mode="popLayout">
+            {filteredPrograms.map((program) => (
+              <motion.div
+                layout
+                initial={{ opacity: 0, scale: 0.92 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.92 }}
+                transition={{ duration: 0.28, ease: 'easeOut' }}
+                className="program__wrap"
+                key={program.index}
+              >
+                <article
+                  className="program"
+                  data-tilt
+                  style={{ '--accent': program.accent }}
+                >
+                  <div className="program__top">
+                    <span className="program__index mono">[{program.index}]</span>
+                    <span className="program__glyph" aria-hidden="true">
+                      {program.title.charAt(0)}
+                    </span>
+                  </div>
+                  <h3 className="program__title">{program.title}</h3>
+                  <p className="program__blurb">{program.blurb}</p>
+                  <ul className="program__tags">
+                    {program.tags.map((tag) => (
+                      <li key={tag}>{tag}</li>
+                    ))}
+                  </ul>
+                  <a className="program__link mono" href="#contact">
+                    view track <span>↗</span>
+                  </a>
+                </article>
+              </motion.div>
+            ))}
+          </AnimatePresence>
         </div>
       </div>
     </section>
@@ -708,6 +819,43 @@ function App() {
   usePointerEffects()
 
   const [navHidden, setNavHidden] = useState(false)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+
+  useEffect(() => {
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      touchMultiplier: 2,
+      smoothWheel: true,
+    })
+
+    function raf(time) {
+      lenis.raf(time)
+      requestAnimationFrame(raf)
+    }
+
+    requestAnimationFrame(raf)
+
+    const handleAnchorClick = (e) => {
+      const target = e.target.closest('a[href^="#"]')
+      if (!target) return
+      const href = target.getAttribute('href')
+      if (href && href.startsWith('#')) {
+        e.preventDefault()
+        const el = href === '#top' ? 0 : document.querySelector(href)
+        if (el !== null) {
+          lenis.scrollTo(el, { offset: -70, duration: 1.4 })
+        }
+      }
+    }
+
+    document.addEventListener('click', handleAnchorClick)
+
+    return () => {
+      document.removeEventListener('click', handleAnchorClick)
+      lenis.destroy()
+    }
+  }, [])
 
   useEffect(() => {
     let lastY = window.scrollY
@@ -725,7 +873,21 @@ function App() {
     <div className="site">
       <div className="grain" aria-hidden="true" />
       <Cursor />
-      <Nav hidden={navHidden} />
+      <PillNav
+        items={NAV_LINKS}
+        hidden={navHidden}
+        baseColor="rgba(5, 6, 13, 0.75)"
+        pillColor="rgba(255, 255, 255, 0.05)"
+        pillTextColor="#f3f5ff"
+        hoveredPillTextColor="#04060f"
+        ease="power3.easeOut"
+        onMobileMenuClick={() => setMobileMenuOpen(true)}
+      />
+      <MobileMenu
+        isOpen={mobileMenuOpen}
+        onClose={() => setMobileMenuOpen(false)}
+        links={NAV_LINKS}
+      />
       <main>
         <Hero />
         <Marquee />

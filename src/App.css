@@ -708,10 +708,110 @@
   font-size: 0.75rem;
   color: var(--green);
   background: rgba(74, 222, 128, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+}
+
+.terminal__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.terminal__btn {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--line);
+  color: var(--text-h);
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  padding: 0.3rem 0.65rem;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: all 0.2s ease;
+}
+
+.terminal__btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: var(--cyan);
+  color: var(--cyan);
+}
+
+.terminal__btn--run {
+  background: rgba(34, 211, 238, 0.1);
+  border-color: rgba(34, 211, 238, 0.3);
+  color: var(--cyan);
+}
+
+.terminal__btn--run:hover {
+  background: rgba(34, 211, 238, 0.25);
+  box-shadow: 0 0 12px rgba(34, 211, 238, 0.3);
+}
+
+.terminal__logs {
+  background: #060814;
+  border-top: 1px dashed var(--line);
+  padding: 0.8rem 1.15rem;
+  font-family: var(--mono);
+  font-size: 0.73rem;
+  max-height: 140px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.terminal__log-line {
+  color: var(--cyan);
+  display: flex;
+  gap: 0.5rem;
+}
+
+.terminal__log-time {
+  color: var(--muted);
+  font-size: 0.68rem;
 }
 
 .terminal__blink {
   animation: promptBlink 1.1s steps(1) infinite;
+}
+
+/* Program Filters */
+.programs__filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-bottom: 2.2rem;
+}
+
+.filter-btn {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--line);
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  padding: 0.5rem 1.1rem;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.22s ease;
+}
+
+.filter-btn:hover {
+  color: var(--text-h);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.filter-btn--active {
+  background: var(--grad);
+  color: #04060f;
+  border-color: transparent;
+  font-weight: 600;
+  box-shadow: 0 4px 18px rgba(139, 123, 255, 0.35);
 }
 
 /* ---------- Programs ---------- */

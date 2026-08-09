@@ -1,0 +1,67 @@
+.liquid-filter-pill {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.55rem 1.25rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--line);
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  border-radius: 999px;
+  cursor: pointer;
+  overflow: hidden;
+  line-height: 1;
+  white-space: nowrap;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  user-select: none;
+}
+
+.liquid-filter-pill:hover {
+  border-color: rgba(34, 211, 238, 0.4);
+}
+
+.liquid-filter-pill.is-active {
+  border-color: var(--cyan);
+  box-shadow: 0 0 16px rgba(34, 211, 238, 0.25);
+  color: var(--cyan);
+}
+
+.liquid-filter-pill .hover-circle {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  border-radius: 50%;
+  background: var(--cyan);
+  z-index: 1;
+  display: block;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.liquid-filter-pill .label-stack {
+  position: relative;
+  display: inline-block;
+  line-height: 1;
+  z-index: 2;
+}
+
+.liquid-filter-pill .pill-label {
+  position: relative;
+  z-index: 2;
+  display: inline-block;
+  line-height: 1;
+  will-change: transform;
+}
+
+.liquid-filter-pill .pill-label-hover {
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: #04060f;
+  font-weight: 700;
+  z-index: 3;
+  display: inline-block;
+  will-change: transform, opacity;
+}
