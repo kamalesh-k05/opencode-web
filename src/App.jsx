@@ -223,38 +223,6 @@ function Cursor() {
   )
 }
 
-function Nav({ hidden = false, onOpenMobileMenu }) {
-  return (
-    <header className={`nav${hidden ? ' nav--hidden' : ''}`}>
-      <a className="nav__brand" href="#top">
-        cs<span className="nav__brand-accent">:</span>
-        <span className="nav__brand-slash">//</span>department
-      </a>
-      <nav className="nav__links" aria-label="Primary">
-        {NAV_LINKS.map((link) => (
-          <a key={link.href} href={link.href}>
-            {link.label}
-          </a>
-        ))}
-      </nav>
-      <a className="nav__cta" href="#contact">
-        Apply Now →
-      </a>
-      <button
-        className="nav__hamburger"
-        onClick={onOpenMobileMenu}
-        aria-label="Open navigation menu"
-      >
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-          <line x1="3" y1="6" x2="21" y2="6" />
-          <line x1="3" y1="12" x2="21" y2="12" />
-          <line x1="3" y1="18" x2="21" y2="18" />
-        </svg>
-      </button>
-    </header>
-  )
-}
-
 function Hero() {
   return (
     <section className="hero" id="top">
