@@ -147,10 +147,10 @@ function KolamPlane({ colors, opacity, size, speed }) {
   )
 }
 
-export default function Kolam({ opacity = 0.5, size = 6, speed = 1, colors = PALETTE }) {
+export default function Kolam({ opacity = 0.5, size = 6, speed = 1, colors = PALETTE, dpr = [1, 1.5] }) {
   return (
     <Canvas
-      dpr={[1, 1.5]}
+      dpr={dpr}
       gl={{ antialias: true, alpha: true, powerPreference: 'low-power' }}
       camera={{ position: [0, 0, 8], fov: 50 }}
       style={{ position: 'absolute', inset: 0 }}

@@ -2,14 +2,14 @@ import { Suspense, lazy, useEffect, useState } from 'react'
 import Lenis from 'lenis'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import Ferrofluid from './components/Ferrofluid'
-import Orb from './components/Orb'
 import ScrollExpand from './components/ScrollExpand'
 import Masonry from './components/Masonry'
-import ImageTrail from './components/ImageTrail'
 import OptionWheel from './components/OptionWheel'
 import './App.css'
 
+const Ferrofluid = lazy(() => import('./components/Ferrofluid'))
+const Orb = lazy(() => import('./components/Orb'))
+const ImageTrail = lazy(() => import('./components/ImageTrail'))
 const Kolam = lazy(() => import('./components/Kolam'))
 
 gsap.registerPlugin(ScrollTrigger)
@@ -293,31 +293,35 @@ function Nav({ light, onMenuClick }) {
   )
 }
 
-function Hero() {
+function Hero({ poorDevice }) {
   return (
     <section className="hero" id="top">
       <div className="hero__fluid" aria-hidden="true">
-        <Ferrofluid
-          colors={['#e8502e', '#f2a33c', '#ffd9a0']}
-          flowDirection="up"
-          speed={0.42}
-          scale={1.7}
-          turbulence={1.2}
-          fluidity={0.16}
-          rimWidth={0.22}
-          sharpness={2.6}
-          shimmer={1.4}
-          glow={2.2}
-          opacity={1}
-          mouseStrength={1.2}
-          mouseRadius={0.4}
-          mouseDampening={0.12}
-        />
+        {!poorDevice && (
+          <Suspense fallback={null}>
+            <Ferrofluid
+              colors={['#e8502e', '#f2a33c', '#ffd9a0']}
+              flowDirection="up"
+              speed={0.42}
+              scale={1.7}
+              turbulence={1.2}
+              fluidity={0.16}
+              rimWidth={0.22}
+              sharpness={2.6}
+              shimmer={1.4}
+              glow={2.2}
+              opacity={1}
+              mouseStrength={1.2}
+              mouseRadius={0.4}
+              mouseDampening={0.12}
+            />
+          </Suspense>
+        )}
       </div>
       <div className="hero__scrim" aria-hidden="true" />
       <div className="hero__kolam" aria-hidden="true">
         <Suspense fallback={null}>
-          <Kolam opacity={0.5} size={6.2} speed={0.85} />
+          <Kolam opacity={0.5} size={6.2} speed={0.85} dpr={poorDevice ? [1, 1] : [1, 1.5]} />
         </Suspense>
       </div>
       <div className="container hero__inner">
@@ -443,11 +447,15 @@ function Categories() {
   )
 }
 
-function Gallery() {
+function Gallery({ poorDevice }) {
   return (
     <section className="gallery" id="gallery">
       <div className="gallery__orb" aria-hidden="true">
-        <Orb hue={22} hoverIntensity={0.3} backgroundColor="#1a0f08" />
+        {!poorDevice && (
+          <Suspense fallback={null}>
+            <Orb hue={22} hoverIntensity={0.3} backgroundColor="#1a0f08" />
+          </Suspense>
+        )}
       </div>
       <div className="container gallery__inner">
         <div className="band-head band-head--dark" data-reveal>
@@ -590,13 +598,17 @@ function Visit() {
   )
 }
 
-function Newsletter() {
+function Newsletter({ poorDevice }) {
   const [email, setEmail] = useState('')
   const [done, setDone] = useState(false)
   return (
     <section className="newsletter" id="newsletter">
       <div className="newsletter__trail" aria-hidden="true">
-        <ImageTrail items={TRAIL_IMAGES} variant={2} />
+        {!poorDevice && (
+          <Suspense fallback={null}>
+            <ImageTrail items={TRAIL_IMAGES} variant={2} />
+          </Suspense>
+        )}
       </div>
       <div className="container newsletter__inner">
         <p className="band-head__eyebrow">Weekly offers</p>
@@ -694,33 +706,46 @@ function App() {
 
   const [light, setLight] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
+  const [poorDevice] = useState(
+    () => typeof navigator !== 'undefined' && /Android/i.test(navigator.userAgent || ''),
+  )
 
   useEffect(() => {
-    const lenis = new Lenis({
-      duration: 1.15,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      touchMultiplier: 2,
-      smoothWheel: true,
-    })
+    if (poorDevice) document.documentElement.classList.add('is-android')
+    return () => document.documentElement.classList.remove('is-android')
+  }, [poorDevice])
 
-    lenis.on('scroll', ScrollTrigger.update)
+  useEffect(() => {
+    let lenis = null
+    if (!poorDevice) {
+      lenis = new Lenis({
+        duration: 1.15,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        touchMultiplier: 2,
+        smoothWheel: true,
+      })
 
-    function raf(time) {
-      lenis.raf(time)
+      lenis.on('scroll', ScrollTrigger.update)
+
+      function raf(time) {
+        lenis.raf(time)
+        requestAnimationFrame(raf)
+      }
+
       requestAnimationFrame(raf)
     }
-
-    requestAnimationFrame(raf)
 
     const handleAnchorClick = (e) => {
       const target = e.target.closest('a[href^="#"]')
       if (!target) return
       const href = target.getAttribute('href')
       if (href && href.startsWith('#')) {
-        e.preventDefault()
-        const el = href === '#top' ? 0 : document.querySelector(href)
-        if (el !== null) {
-          lenis.scrollTo(el, { offset: -70, duration: 1.4 })
+        if (lenis) {
+          e.preventDefault()
+          const el = href === '#top' ? 0 : document.querySelector(href)
+          if (el !== null) {
+            lenis.scrollTo(el, { offset: -70, duration: 1.4 })
+          }
         }
       }
     }
@@ -729,9 +754,9 @@ function App() {
 
     return () => {
       document.removeEventListener('click', handleAnchorClick)
-      lenis.destroy()
+      lenis?.destroy()
     }
-  }, [])
+  }, [poorDevice])
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -816,13 +841,13 @@ function App() {
         </div>
       )}
       <main>
-        <Hero />
+        <Hero poorDevice={poorDevice} />
         <Marquee />
         <Categories />
-        <Gallery />
+        <Gallery poorDevice={poorDevice} />
         <Story />
         <Visit />
-        <Newsletter />
+        <Newsletter poorDevice={poorDevice} />
       </main>
       <Footer />
     </div>

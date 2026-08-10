@@ -1138,3 +1138,18 @@ a.visit__meta-value {
     gap: 14px;
   }
 }
+
+/* ---------- Android performance fallbacks ---------- */
+
+.is-android .hero {
+  background:
+    radial-gradient(90% 70% at 85% 15%, rgba(232, 80, 46, 0.42), transparent 55%),
+    radial-gradient(70% 60% at 15% 90%, rgba(242, 163, 60, 0.28), transparent 60%),
+    var(--color-ink);
+}
+
+.is-android .gallery {
+  background:
+    radial-gradient(50% 40% at 100% 0%, rgba(232, 80, 46, 0.2), transparent 70%),
+    var(--color-ink);
+}
