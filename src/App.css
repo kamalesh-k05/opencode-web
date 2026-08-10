@@ -1034,8 +1034,8 @@ a.visit__meta-value {
 
 @media (max-width: 1024px) {
   .aisle-switcher {
-    grid-template-columns: 1fr;
-    gap: var(--space-5);
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: var(--space-4);
   }
 
   .aisle-wheel {
@@ -1081,12 +1081,16 @@ a.visit__meta-value {
 }
 
 @media (max-width: 640px) {
+  .aisle-switcher {
+    gap: 20px;
+  }
+
   .aisle-wheel {
     height: 400px;
   }
 
   .aisle-stage__stack {
-    aspect-ratio: 4 / 4.6;
+    aspect-ratio: 4 / 4.4;
   }
 
   .aisle-stage__caption {
