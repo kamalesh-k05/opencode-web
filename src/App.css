@@ -1043,7 +1043,13 @@ a.visit__meta-value {
   }
 
   .hero__kolam {
-    display: none;
+    display: block;
+    right: -90px;
+    top: 90px;
+    width: min(330px, 55vw);
+    height: min(330px, 55vw);
+    transform: none;
+    opacity: 0.5;
   }
 
   .story__body {
