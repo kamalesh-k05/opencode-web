@@ -380,8 +380,8 @@ function Categories() {
   useEffect(() => {
     const mq = window.matchMedia('(max-width: 640px)')
     const update = () => {
-      setWheelSize(mq.matches ? 1.05 : 2.1)
-      setWheelInset(mq.matches ? 10 : 70)
+      setWheelSize(mq.matches ? 0.8 : 2.1)
+      setWheelInset(mq.matches ? 8 : 70)
     }
     update()
     mq.addEventListener('change', update)
