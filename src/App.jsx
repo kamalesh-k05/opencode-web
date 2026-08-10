@@ -14,8 +14,6 @@ const Kolam = lazy(() => import('./components/Kolam'))
 
 gsap.registerPlugin(ScrollTrigger)
 
-const WHATSAPP = 'https://wa.me/919876543210?text=' + encodeURIComponent('Hi Pavazha Malli! I would like to order home essentials.')
-
 const NAV_LINKS = [
   { label: 'Shop', href: '#categories' },
   { label: 'Gallery', href: '#gallery' },
@@ -132,7 +130,6 @@ const GALLERY = [
     note: 'Sacks of rice, dal and pulses from trusted mills.',
     height: 500,
     img: `${IMG}photo-1644377949116-c4a6b529241c?fm=jpg&q=80&w=1000&auto=format&fit=crop`,
-    url: WHATSAPP,
   },
   {
     id: 'spices-masala',
@@ -141,7 +138,6 @@ const GALLERY = [
     note: 'Fresh-ground masalas and colourful spice counters.',
     height: 360,
     img: `${IMG}photo-1775433205046-86e060feff06?fm=jpg&q=80&w=800&auto=format&fit=crop`,
-    url: WHATSAPP,
   },
   {
     id: 'fresh-produce',
@@ -150,7 +146,6 @@ const GALLERY = [
     note: 'Daily vegetables and fruits, picked fresh.',
     height: 480,
     img: `${IMG}photo-1663753489332-626c2786e1a0?fm=jpg&q=80&w=800&auto=format&fit=crop`,
-    url: WHATSAPP,
   },
   {
     id: 'sweets-mithai',
@@ -159,7 +154,6 @@ const GALLERY = [
     note: 'Jalebis, mithai and festive treats.',
     height: 420,
     img: `${IMG}photo-1760263217153-ef719ca2da19?fm=jpg&q=80&w=800&auto=format&fit=crop`,
-    url: WHATSAPP,
   },
   {
     id: 'brass-cookware',
@@ -168,7 +162,6 @@ const GALLERY = [
     note: 'Brass, steel and everyday cookware.',
     height: 340,
     img: `${IMG}photo-1652960018678-1f19799996c5?fm=jpg&q=80&w=800&auto=format&fit=crop`,
-    url: WHATSAPP,
   },
   {
     id: 'textiles-fabrics',
@@ -177,7 +170,6 @@ const GALLERY = [
     note: 'Sarees, towels and home linen.',
     height: 460,
     img: `${IMG}photo-1762764214015-d5c22646465b?fm=jpg&q=80&w=800&auto=format&fit=crop`,
-    url: WHATSAPP,
   },
   {
     id: 'pooja-festive',
@@ -186,7 +178,6 @@ const GALLERY = [
     note: 'Puja thalis, diyas and festive offerings.',
     height: 440,
     img: 'https://images.pexels.com/photos/38109564/pexels-photo-38109564.jpeg?auto=compress&cs=tinysrgb&w=1000',
-    url: WHATSAPP,
   },
   {
     id: 'masala-box',
@@ -195,7 +186,6 @@ const GALLERY = [
     note: 'Freshly packed masalas for every Tamil kitchen.',
     height: 360,
     img: 'https://images.pexels.com/photos/37911515/pexels-photo-37911515.jpeg?auto=compress&cs=tinysrgb&w=1000',
-    url: WHATSAPP,
   },
   {
     id: 'jalebi-sweets',
@@ -204,7 +194,6 @@ const GALLERY = [
     note: 'Sweets made fresh at the counter.',
     height: 480,
     img: 'https://images.pexels.com/photos/5916371/pexels-photo-5916371.jpeg?auto=compress&cs=tinysrgb&w=1000',
-    url: WHATSAPP,
   },
   {
     id: 'veg-market',
@@ -213,7 +202,6 @@ const GALLERY = [
     note: 'Fresh vegetables straight from the market.',
     height: 420,
     img: 'https://images.pexels.com/photos/16747097/pexels-photo-16747097.jpeg?auto=compress&cs=tinysrgb&w=1000',
-    url: WHATSAPP,
   },
   {
     id: 'grains-pulses',
@@ -222,7 +210,6 @@ const GALLERY = [
     note: 'Rice, beans and pulses in bulk sacks.',
     height: 340,
     img: 'https://images.pexels.com/photos/17555574/pexels-photo-17555574.jpeg?auto=compress&cs=tinysrgb&w=1000',
-    url: WHATSAPP,
   },
   {
     id: 'handloom-textiles',
@@ -231,7 +218,6 @@ const GALLERY = [
     note: 'Hand-woven textiles from local looms.',
     height: 460,
     img: 'https://images.pexels.com/photos/31508152/pexels-photo-31508152.jpeg?auto=compress&cs=tinysrgb&w=1000',
-    url: WHATSAPP,
   },
 ]
 
@@ -281,9 +267,6 @@ function Nav({ light, onMenuClick }) {
         ))}
       </nav>
       <div className="nav__cta-wrap">
-        <a className="nav__whatsapp" href={WHATSAPP} target="_blank" rel="noreferrer">
-          Order on WhatsApp
-        </a>
         <button className="nav__menu" onClick={onMenuClick} aria-label="Open menu">
           <span />
           <span />
@@ -479,8 +462,8 @@ function Gallery({ poorDevice }) {
           />
         </div>
         <div className="gallery__cta" data-reveal>
-          <a className="btn btn--coral" href={WHATSAPP} target="_blank" rel="noreferrer">
-            Order your essentials on WhatsApp
+          <a className="btn btn--coral" href="#visit">
+            Visit the store
           </a>
         </div>
       </div>
@@ -563,14 +546,8 @@ function Visit() {
                 +91 452 234 5678
               </a>
             </div>
-            <div>
-              <span className="visit__meta-label">WhatsApp orders</span>
-              <a className="visit__meta-value" href={WHATSAPP} target="_blank" rel="noreferrer">
-                Message us anytime
-              </a>
             </div>
           </div>
-        </div>
         <div className="visit__col visit__col--card" data-reveal-scale>
           <div className="visit__card">
             <span className="visit__card-chip">📍 5 min from Meenakshi Amman Temple</span>
@@ -588,8 +565,8 @@ function Visit() {
                 <span>Call ahead</span>
               </div>
             </div>
-            <a className="btn btn--coral btn--block" href={WHATSAPP} target="_blank" rel="noreferrer">
-              Order via WhatsApp →
+            <a className="btn btn--coral btn--block" href="tel:+914522345678">
+              Call the store →
             </a>
           </div>
         </div>
@@ -686,9 +663,6 @@ function Footer() {
           <div className="footer__col">
             <h4 className="footer__head">Reach us</h4>
             <a href="tel:+914522345678">+91 452 234 5678</a>
-            <a href={WHATSAPP} target="_blank" rel="noreferrer">
-              WhatsApp
-            </a>
             <a href="mailto:hello@pavazhamali.in">hello@pavazhamali.in</a>
           </div>
         </div>
@@ -834,8 +808,8 @@ function App() {
                 {link.label}
               </a>
             ))}
-            <a className="mobile-menu__cta" href={WHATSAPP} target="_blank" rel="noreferrer">
-              Order on WhatsApp
+            <a className="mobile-menu__cta" href="#visit">
+              Visit the store
             </a>
           </nav>
         </div>
