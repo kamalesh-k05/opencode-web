@@ -5,6 +5,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import ScrollExpand from './components/ScrollExpand'
 import Masonry from './components/Masonry'
 import OptionWheel from './components/OptionWheel'
+import storyImg from './assets/story-madurai.jpg'
 import './App.css'
 
 function useDefer(delay = 1200) {
@@ -488,15 +489,15 @@ function Story() {
     <section className="story" id="story">
       <div className="story__expand">
         <ScrollExpand
-          src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Meenakshi_Amman_Temple%2C_Madurai.jpg/1280px-Meenakshi_Amman_Temple%2C_Madurai.jpg"
-          alt="Meenakshi Amman Temple gopuram, Madurai"
+          src={storyImg}
+          alt="Meenakshi Amman West Tower, Madurai"
           title="Rooted in Madurai."
           scrollHint="Scroll"
           useWindowScroll
           startWidth={46}
           startHeight={62}
           startRadius={26}
-          mediaZoom={1.25}
+          mediaZoom={1.15}
         >
           <span className="story__overlay-label">Est. 1987 · West Masi Street</span>
         </ScrollExpand>
