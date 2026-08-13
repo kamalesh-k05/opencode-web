@@ -7,6 +7,15 @@ import Masonry from './components/Masonry'
 import OptionWheel from './components/OptionWheel'
 import './App.css'
 
+function useDefer(delay = 1200) {
+  const [ready, setReady] = useState(false)
+  useEffect(() => {
+    const t = window.setTimeout(() => setReady(true), delay)
+    return () => window.clearTimeout(t)
+  }, [delay])
+  return ready
+}
+
 const Ferrofluid = lazy(() => import('./components/Ferrofluid'))
 const Orb = lazy(() => import('./components/Orb'))
 const ImageTrail = lazy(() => import('./components/ImageTrail'))
@@ -129,7 +138,7 @@ const GALLERY = [
     tamil: 'தானியம்',
     note: 'Sacks of rice, dal and pulses from trusted mills.',
     height: 500,
-    img: `${IMG}photo-1644377949116-c4a6b529241c?fm=jpg&q=80&w=1000&auto=format&fit=crop`,
+    img: `${IMG}photo-1644377949116-c4a6b529241c?fm=jpg&q=80&w=800&auto=format&fit=crop`,
   },
   {
     id: 'spices-masala',
@@ -177,7 +186,7 @@ const GALLERY = [
     tamil: 'பூஜை & திருவிழா',
     note: 'Puja thalis, diyas and festive offerings.',
     height: 440,
-    img: 'https://images.pexels.com/photos/38109564/pexels-photo-38109564.jpeg?auto=compress&cs=tinysrgb&w=1000',
+    img: 'https://images.pexels.com/photos/38109564/pexels-photo-38109564.jpeg?auto=compress&cs=tinysrgb&w=800',
   },
   {
     id: 'masala-box',
@@ -185,7 +194,7 @@ const GALLERY = [
     tamil: 'மசாலா பெட்டி',
     note: 'Freshly packed masalas for every Tamil kitchen.',
     height: 360,
-    img: 'https://images.pexels.com/photos/37911515/pexels-photo-37911515.jpeg?auto=compress&cs=tinysrgb&w=1000',
+    img: 'https://images.pexels.com/photos/37911515/pexels-photo-37911515.jpeg?auto=compress&cs=tinysrgb&w=800',
   },
   {
     id: 'jalebi-sweets',
@@ -193,7 +202,7 @@ const GALLERY = [
     tamil: 'ஜிலேபி',
     note: 'Sweets made fresh at the counter.',
     height: 480,
-    img: 'https://images.pexels.com/photos/5916371/pexels-photo-5916371.jpeg?auto=compress&cs=tinysrgb&w=1000',
+    img: 'https://images.pexels.com/photos/5916371/pexels-photo-5916371.jpeg?auto=compress&cs=tinysrgb&w=800',
   },
   {
     id: 'veg-market',
@@ -201,7 +210,7 @@ const GALLERY = [
     tamil: 'காய்கறி கடை',
     note: 'Fresh vegetables straight from the market.',
     height: 420,
-    img: 'https://images.pexels.com/photos/16747097/pexels-photo-16747097.jpeg?auto=compress&cs=tinysrgb&w=1000',
+    img: 'https://images.pexels.com/photos/16747097/pexels-photo-16747097.jpeg?auto=compress&cs=tinysrgb&w=800',
   },
   {
     id: 'grains-pulses',
@@ -209,7 +218,7 @@ const GALLERY = [
     tamil: 'தானியங்கள்',
     note: 'Rice, beans and pulses in bulk sacks.',
     height: 340,
-    img: 'https://images.pexels.com/photos/17555574/pexels-photo-17555574.jpeg?auto=compress&cs=tinysrgb&w=1000',
+    img: 'https://images.pexels.com/photos/17555574/pexels-photo-17555574.jpeg?auto=compress&cs=tinysrgb&w=800',
   },
   {
     id: 'handloom-textiles',
@@ -217,7 +226,7 @@ const GALLERY = [
     tamil: 'கைத்தறி',
     note: 'Hand-woven textiles from local looms.',
     height: 460,
-    img: 'https://images.pexels.com/photos/31508152/pexels-photo-31508152.jpeg?auto=compress&cs=tinysrgb&w=1000',
+    img: 'https://images.pexels.com/photos/31508152/pexels-photo-31508152.jpeg?auto=compress&cs=tinysrgb&w=800',
   },
 ]
 
@@ -277,12 +286,12 @@ function Nav({ light, onMenuClick }) {
 }
 
 function Hero({ poorDevice }) {
+  const kolamReady = useDefer(1000)
   return (
     <section className="hero" id="top">
       <div className="hero__fluid" aria-hidden="true">
-        {!poorDevice && (
-          <Suspense fallback={null}>
-            <Ferrofluid
+        <Suspense fallback={null}>
+          <Ferrofluid
               colors={['#e8502e', '#f2a33c', '#ffd9a0']}
               flowDirection="up"
               dpr={poorDevice ? 1 : undefined}
@@ -300,13 +309,14 @@ function Hero({ poorDevice }) {
               mouseDampening={0.12}
             />
           </Suspense>
-        )}
       </div>
       <div className="hero__scrim" aria-hidden="true" />
       <div className="hero__kolam" aria-hidden="true">
-        <Suspense fallback={null}>
-          <Kolam opacity={0.5} size={6.2} speed={0.85} dpr={poorDevice ? [1, 1] : [1, 1.5]} />
-        </Suspense>
+        {kolamReady && (
+          <Suspense fallback={null}>
+            <Kolam opacity={0.5} size={6.2} speed={0.85} dpr={poorDevice ? [1, 1] : [1, 1.5]} />
+          </Suspense>
+        )}
       </div>
       <div className="container hero__inner">
         <p className="hero__eyebrow" data-reveal>
@@ -432,12 +442,15 @@ function Categories() {
 }
 
 function Gallery({ poorDevice }) {
+  const orbReady = useDefer(1500)
   return (
     <section className="gallery" id="gallery">
       <div className="gallery__orb" aria-hidden="true">
-        <Suspense fallback={null}>
-          <Orb hue={22} hoverIntensity={0.3} backgroundColor="#1a0f08" dpr={poorDevice ? 1 : undefined} />
-        </Suspense>
+        {orbReady && (
+          <Suspense fallback={null}>
+            <Orb hue={22} hoverIntensity={0.3} backgroundColor="#1a0f08" dpr={poorDevice ? 1 : undefined} />
+          </Suspense>
+        )}
       </div>
       <div className="container gallery__inner">
         <div className="band-head band-head--dark" data-reveal>
@@ -475,7 +488,7 @@ function Story() {
     <section className="story" id="story">
       <div className="story__expand">
         <ScrollExpand
-          src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Meenakshi_Amman_Temple%2C_Madurai.jpg/1920px-Meenakshi_Amman_Temple%2C_Madurai.jpg"
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Meenakshi_Amman_Temple%2C_Madurai.jpg/960px-Meenakshi_Amman_Temple%2C_Madurai.jpg"
           alt="Meenakshi Amman Temple gopuram, Madurai"
           title="Rooted in Madurai."
           scrollHint="Scroll"
@@ -577,10 +590,11 @@ function Visit() {
 function Newsletter({ poorDevice }) {
   const [email, setEmail] = useState('')
   const [done, setDone] = useState(false)
+  const trailReady = useDefer(2000)
   return (
     <section className="newsletter" id="newsletter">
       <div className="newsletter__trail" aria-hidden="true">
-        {!poorDevice && (
+        {trailReady && (
           <Suspense fallback={null}>
             <ImageTrail items={TRAIL_IMAGES} variant={2} />
           </Suspense>
