@@ -124,8 +124,10 @@ const Masonry = ({
   }
 
   useEffect(() => {
+    if (!inView) return
     preloadImages(items.map((i) => i.img)).then(() => setImagesReady(true))
-  }, [items])
+    // oxlint-disable-next-line react-hooks/exhaustive-deps
+  }, [items, inView])
 
   const { grid, totalHeight } = useMemo(() => {
     if (!width) return { grid: [], totalHeight: 0 }

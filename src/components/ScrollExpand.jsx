@@ -198,7 +198,7 @@ const ScrollExpand = ({
         playsInline
       />
     ) : (
-      <img ref={mediaRef} className="scroll-expand__media" src={src} alt={alt} draggable={false} />
+      <img ref={mediaRef} className="scroll-expand__media" src={src} alt={alt} draggable={false} loading="lazy" decoding="async" />
     );
 
   return (
