@@ -488,7 +488,7 @@ function Story() {
     <section className="story" id="story">
       <div className="story__expand">
         <ScrollExpand
-          src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Meenakshi_Amman_Temple%2C_Madurai.jpg/960px-Meenakshi_Amman_Temple%2C_Madurai.jpg"
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Meenakshi_Amman_Temple%2C_Madurai.jpg/1280px-Meenakshi_Amman_Temple%2C_Madurai.jpg"
           alt="Meenakshi Amman Temple gopuram, Madurai"
           title="Rooted in Madurai."
           scrollHint="Scroll"
@@ -496,7 +496,7 @@ function Story() {
           startWidth={46}
           startHeight={62}
           startRadius={26}
-          mediaZoom={1.4}
+          mediaZoom={1.25}
         >
           <span className="story__overlay-label">Est. 1987 · West Masi Street</span>
         </ScrollExpand>
