@@ -280,26 +280,25 @@ function Hero({ poorDevice }) {
   return (
     <section className="hero" id="top">
       <div className="hero__fluid" aria-hidden="true">
-        {!poorDevice && (
-          <Suspense fallback={null}>
-            <Ferrofluid
-              colors={['#e8502e', '#f2a33c', '#ffd9a0']}
-              flowDirection="up"
-              speed={0.42}
-              scale={1.7}
-              turbulence={1.2}
-              fluidity={0.16}
-              rimWidth={0.22}
-              sharpness={2.6}
-              shimmer={1.4}
-              glow={2.2}
-              opacity={1}
-              mouseStrength={1.2}
-              mouseRadius={0.4}
-              mouseDampening={0.12}
-            />
-          </Suspense>
-        )}
+        <Suspense fallback={null}>
+          <Ferrofluid
+            colors={['#e8502e', '#f2a33c', '#ffd9a0']}
+            flowDirection="up"
+            dpr={poorDevice ? 1 : undefined}
+            speed={poorDevice ? 0.3 : 0.42}
+            scale={poorDevice ? 1.25 : 1.7}
+            turbulence={poorDevice ? 0.75 : 1.2}
+            fluidity={poorDevice ? 0.12 : 0.16}
+            rimWidth={0.22}
+            sharpness={poorDevice ? 1.9 : 2.6}
+            shimmer={poorDevice ? 0.9 : 1.4}
+            glow={poorDevice ? 1.3 : 2.2}
+            opacity={1}
+            mouseStrength={1.2}
+            mouseRadius={0.4}
+            mouseDampening={0.12}
+          />
+        </Suspense>
       </div>
       <div className="hero__scrim" aria-hidden="true" />
       <div className="hero__kolam" aria-hidden="true">
@@ -434,11 +433,9 @@ function Gallery({ poorDevice }) {
   return (
     <section className="gallery" id="gallery">
       <div className="gallery__orb" aria-hidden="true">
-        {!poorDevice && (
-          <Suspense fallback={null}>
-            <Orb hue={22} hoverIntensity={0.3} backgroundColor="#1a0f08" />
-          </Suspense>
-        )}
+        <Suspense fallback={null}>
+          <Orb hue={22} hoverIntensity={0.3} backgroundColor="#1a0f08" dpr={poorDevice ? 1 : undefined} />
+        </Suspense>
       </div>
       <div className="container gallery__inner">
         <div className="band-head band-head--dark" data-reveal>
@@ -581,11 +578,9 @@ function Newsletter({ poorDevice }) {
   return (
     <section className="newsletter" id="newsletter">
       <div className="newsletter__trail" aria-hidden="true">
-        {!poorDevice && (
-          <Suspense fallback={null}>
-            <ImageTrail items={TRAIL_IMAGES} variant={2} />
-          </Suspense>
-        )}
+        <Suspense fallback={null}>
+          <ImageTrail items={TRAIL_IMAGES} variant={2} />
+        </Suspense>
       </div>
       <div className="container newsletter__inner">
         <p className="band-head__eyebrow">Weekly offers</p>
@@ -691,23 +686,21 @@ function App() {
 
   useEffect(() => {
     let lenis = null
-    if (!poorDevice) {
-      lenis = new Lenis({
-        duration: 1.15,
-        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-        touchMultiplier: 2,
-        smoothWheel: true,
-      })
+    lenis = new Lenis({
+      duration: poorDevice ? 0.7 : 1.15,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      touchMultiplier: poorDevice ? 3 : 2,
+      smoothWheel: true,
+    })
 
-      lenis.on('scroll', ScrollTrigger.update)
+    lenis.on('scroll', ScrollTrigger.update)
 
-      function raf(time) {
-        lenis.raf(time)
-        requestAnimationFrame(raf)
-      }
-
+    function raf(time) {
+      lenis.raf(time)
       requestAnimationFrame(raf)
     }
+
+    requestAnimationFrame(raf)
 
     const handleAnchorClick = (e) => {
       const target = e.target.closest('a[href^="#"]')
